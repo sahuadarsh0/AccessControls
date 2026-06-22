@@ -2,10 +2,14 @@
 
 A native macOS menu bar app for one-click access to saved applications and URLs/deep links.
 
+<p align="center">
+  <img src="docs/images/hero-banner.svg" alt="Access Controls hero banner" width="100%">
+</p>
+
 ## Preview
 
-<p>
-  <img src="docs/images/access-controls-menu.png" alt="Access Controls menu showing saved apps and links" width="520">
+<p align="center">
+  <img src="docs/images/menu-preview.svg" alt="Access Controls menu preview with apps and links" width="620">
 </p>
 
 ## Features
