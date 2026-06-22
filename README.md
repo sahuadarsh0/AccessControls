@@ -5,11 +5,7 @@ A native macOS menu bar app for one-click access to saved applications and URLs/
 ## Preview
 
 <p>
-  <img src="docs/images/menu-preview.svg" alt="Access Controls menu preview" width="760">
-</p>
-
-<p>
-  <img src="docs/images/app-picker-preview.svg" alt="Access Controls app picker preview" width="760">
+  <img src="docs/images/access-controls-menu.png" alt="Access Controls menu showing saved apps and links" width="520">
 </p>
 
 ## Features
