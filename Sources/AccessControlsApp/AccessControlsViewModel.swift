@@ -239,6 +239,19 @@ final class AccessControlsViewModel: ObservableObject {
         }
     }
 
+    func copyTarget(_ item: AccessItem) {
+        guard item.kind == .link,
+              let urlString = item.urlString,
+              !urlString.isEmpty
+        else {
+            return
+        }
+
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(urlString, forType: .string)
+    }
+
     func refreshLaunchAtLogin() {
         launchAtLoginEnabled = SMAppService.mainApp.status == .enabled
     }

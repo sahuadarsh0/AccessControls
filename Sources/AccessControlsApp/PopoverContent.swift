@@ -20,7 +20,7 @@ struct PopoverContent: View {
         }
 
         let sectionCount = (apps.isEmpty ? 0 : 1) + (links.isEmpty ? 0 : 1)
-        let rawHeight = CGFloat(apps.count * 42 + links.count * 58 + sectionCount * 26 + 12)
+        let rawHeight = CGFloat((apps.count + links.count) * 42 + sectionCount * 26 + 12)
         return min(max(rawHeight, 84), 318)
     }
 
@@ -139,6 +139,7 @@ struct PopoverContent: View {
                     AccessItemRow(
                         item: item,
                         open: { model.open(item) },
+                        copy: item.kind == .link ? { model.copyTarget(item) } : nil,
                         edit: item.kind == .link ? { model.edit(item) } : nil,
                         delete: { deleteTarget = item }
                     )
@@ -235,42 +236,40 @@ struct PopoverContent: View {
 private struct AccessItemRow: View {
     var item: AccessItem
     var open: () -> Void
+    var copy: (() -> Void)?
     var edit: (() -> Void)?
     var delete: () -> Void
 
     @State private var isHovering = false
+    @State private var didCopy = false
 
     var body: some View {
-        HStack(spacing: item.kind == .app ? 5 : 6) {
+        HStack(spacing: 5) {
             Button(action: open) {
                 HStack(spacing: 9) {
                     iconTile
 
-                    if let subtitle {
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(item.title)
-                                .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(.white)
-                                .lineLimit(1)
-
-                            Text(subtitle)
-                                .font(.system(size: 10, weight: .medium))
-                                .foregroundStyle(.white.opacity(0.5))
-                                .lineLimit(1)
-                                .truncationMode(.middle)
-                        }
-                    } else {
-                        Text(item.title)
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .lineLimit(1)
-                    }
+                    Text(item.title)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
 
                     Spacer(minLength: 0)
                 }
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+
+            if let copy {
+                Button {
+                    copy()
+                    markCopied()
+                } label: {
+                    Image(systemName: didCopy ? "checkmark" : "doc.on.doc")
+                }
+                .buttonStyle(TinyIconButtonStyle())
+                .help(didCopy ? "Copied" : "Copy link")
+            }
 
             if let edit {
                 Button(action: edit) {
@@ -286,8 +285,8 @@ private struct AccessItemRow: View {
             .buttonStyle(TinyIconButtonStyle(isDestructive: true))
             .help("Delete")
         }
-        .padding(.horizontal, item.kind == .app ? 7 : 8)
-        .padding(.vertical, item.kind == .app ? 5 : 7)
+        .padding(.horizontal, 7)
+        .padding(.vertical, 5)
         .background(
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -305,14 +304,14 @@ private struct AccessItemRow: View {
         .onHover { isHovering = $0 }
     }
 
-    private var subtitle: String? {
-        guard item.kind == .link else {
-            return nil
+    private func markCopied() {
+        didCopy = true
+        Task {
+            try? await Task.sleep(nanoseconds: 900_000_000)
+            await MainActor.run {
+                didCopy = false
+            }
         }
-        if !item.detail.isEmpty {
-            return item.detail
-        }
-        return item.targetSummary
     }
 
     private var iconTile: some View {
@@ -324,14 +323,14 @@ private struct AccessItemRow: View {
                 Image(nsImage: appIcon)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: item.kind == .app ? 21 : 23, height: item.kind == .app ? 21 : 23)
+                    .frame(width: 21, height: 21)
             } else {
                 Image(systemName: item.kind == .app ? "app.fill" : "arrow.up.forward.app.fill")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(tileColor)
             }
         }
-        .frame(width: item.kind == .app ? 28 : 32, height: item.kind == .app ? 28 : 32)
+        .frame(width: 28, height: 28)
     }
 
     private var tileColor: Color {
