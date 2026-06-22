@@ -27,6 +27,8 @@ struct AccessBrandIcon: View {
         NSApplication.shared.applicationIconImage = statusImage
     }
 
+    static let menuBarImage: NSImage = resizedStatusImage(pointSize: 18)
+
     private static let statusImage: NSImage = {
         let url = Bundle.main.url(forResource: "AccessControlsStatusIcon", withExtension: "png")
             ?? Bundle.module.url(forResource: "AccessControlsStatusIcon", withExtension: "png")
@@ -38,6 +40,16 @@ struct AccessBrandIcon: View {
         image.isTemplate = false
         return image
     }()
+
+    private static func resizedStatusImage(pointSize: CGFloat) -> NSImage {
+        let size = NSSize(width: pointSize, height: pointSize)
+        let image = NSImage(size: size)
+        image.lockFocus()
+        statusImage.draw(in: NSRect(origin: .zero, size: size), from: .zero, operation: .sourceOver, fraction: 1)
+        image.unlockFocus()
+        image.isTemplate = false
+        return image
+    }
 
     private static let fallbackImage: NSImage = {
         let image = NSImage(size: NSSize(width: 64, height: 64))

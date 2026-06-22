@@ -13,7 +13,8 @@ struct AccessControlsApp: App {
         MenuBarExtra {
             PopoverContent(model: model)
         } label: {
-            AccessBrandIcon(size: 18)
+            Image(nsImage: AccessBrandIcon.menuBarImage)
+                .renderingMode(.original)
                 .help("Access Controls")
         }
         .menuBarExtraStyle(.window)
