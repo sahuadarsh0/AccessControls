@@ -151,7 +151,7 @@ final class AccessControlsViewModel: ObservableObject {
             )
         )
         linkEditorWindow = window
-        positionUtilityWindow(window, size: size, topOffset: 64)
+        positionUtilityWindow(window, size: size)
         bringUtilityWindowToFront(window)
     }
 
@@ -180,12 +180,12 @@ final class AccessControlsViewModel: ObservableObject {
             )
         )
         appPickerWindow = window
-        positionUtilityWindow(window, size: size, topOffset: 64)
+        positionUtilityWindow(window, size: size)
         bringUtilityWindowToFront(window)
     }
 
-    private func positionUtilityWindow(_ window: NSWindow, size: NSSize, topOffset: CGFloat) {
-        window.level = .statusBar
+    private func positionUtilityWindow(_ window: NSWindow, size: NSSize) {
+        window.level = .popUpMenu
         window.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary, .transient]
         window.isMovableByWindowBackground = true
         window.tabbingMode = .disallowed
@@ -197,15 +197,11 @@ final class AccessControlsViewModel: ObservableObject {
 
         let visibleFrame = screen.visibleFrame
         let edgePadding: CGFloat = 24
-        let reservedMenuWidth: CGFloat = 430
-        let preferredX = visibleFrame.maxX - reservedMenuWidth - size.width - 18
+        let verticalLift: CGFloat = 28
         let centeredX = visibleFrame.midX - size.width / 2
-        let unclampedX = preferredX >= visibleFrame.minX + edgePadding ? preferredX : centeredX
-        let x = min(max(unclampedX, visibleFrame.minX + edgePadding), visibleFrame.maxX - size.width - edgePadding)
-        let y = min(
-            max(visibleFrame.maxY - size.height - topOffset, visibleFrame.minY + edgePadding),
-            visibleFrame.maxY - size.height - edgePadding
-        )
+        let centeredY = visibleFrame.midY - size.height / 2 + verticalLift
+        let x = min(max(centeredX, visibleFrame.minX + edgePadding), visibleFrame.maxX - size.width - edgePadding)
+        let y = min(max(centeredY, visibleFrame.minY + edgePadding), visibleFrame.maxY - size.height - edgePadding)
 
         window.setFrame(NSRect(x: x, y: y, width: size.width, height: size.height), display: false)
     }
