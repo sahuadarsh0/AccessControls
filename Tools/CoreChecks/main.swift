@@ -57,6 +57,12 @@ do {
     try check(reloadedStore.items.first?.title == "School Portal", "Store round trip title failed")
     try check(reloadedStore.items.first?.urlString == "https://example.com", "Store round trip URL failed")
 
+    try reloadedStore.delete(id: item.id)
+
+    let deletedStore = AccessStore(fileURL: fileURL)
+    try deletedStore.load()
+    try check(deletedStore.items.isEmpty, "Store delete persistence failed")
+
     print("AccessControlsCoreChecks passed")
 } catch {
     fputs("AccessControlsCoreChecks failed: \(error)\n", stderr)

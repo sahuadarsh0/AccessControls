@@ -4,7 +4,7 @@ import SwiftUI
 
 struct PopoverContent: View {
     @ObservedObject var model: AccessControlsViewModel
-    @State private var deleteTarget: AccessItem?
+    @State private var pendingDeleteID: AccessItem.ID?
 
     private var apps: [AccessItem] {
         model.items.filter { $0.kind == .app }
@@ -45,26 +45,6 @@ struct PopoverContent: View {
                 message: Text(alert.message),
                 dismissButton: .default(Text("OK"))
             )
-        }
-        .confirmationDialog(
-            deleteTarget.map { "Delete \"\($0.title)\"?" } ?? "Delete shortcut?",
-            isPresented: Binding(
-                get: { deleteTarget != nil },
-                set: { if !$0 { deleteTarget = nil } }
-            ),
-            titleVisibility: .visible
-        ) {
-            Button("Delete", role: .destructive) {
-                if let deleteTarget {
-                    model.delete(deleteTarget)
-                }
-                deleteTarget = nil
-            }
-            Button("Cancel", role: .cancel) {
-                deleteTarget = nil
-            }
-        } message: {
-            Text("This removes it from the menu bar list.")
         }
         .onAppear {
             model.refreshLaunchAtLogin()
@@ -143,7 +123,13 @@ struct PopoverContent: View {
                             open: { model.open(item) },
                             copy: item.kind == .link ? { model.copyTarget(item) } : nil,
                             edit: item.kind == .link ? { model.edit(item) } : nil,
-                            delete: { deleteTarget = item }
+                            isConfirmingDelete: pendingDeleteID == item.id,
+                            requestDelete: { pendingDeleteID = item.id },
+                            confirmDelete: {
+                                model.delete(item)
+                                pendingDeleteID = nil
+                            },
+                            cancelDelete: { pendingDeleteID = nil }
                         )
 
                         if index < items.count - 1 {
@@ -245,7 +231,10 @@ private struct AccessItemRow: View {
     var open: () -> Void
     var copy: (() -> Void)?
     var edit: (() -> Void)?
-    var delete: () -> Void
+    var isConfirmingDelete: Bool
+    var requestDelete: () -> Void
+    var confirmDelete: () -> Void
+    var cancelDelete: () -> Void
 
     @State private var isHovering = false
     @State private var didCopy = false
@@ -267,30 +256,49 @@ private struct AccessItemRow: View {
             }
             .buttonStyle(.plain)
 
-            if let copy {
-                Button {
-                    copy()
-                    markCopied()
-                } label: {
-                    Image(systemName: didCopy ? "checkmark" : "doc.on.doc")
-                }
-                .buttonStyle(RowIconButtonStyle(isActive: isHovering || didCopy))
-                .help(didCopy ? "Copied" : "Copy link")
-            }
+            if isConfirmingDelete {
+                Text("Delete?")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(Color(hex: "#FF8A8A").opacity(0.88))
+                    .lineLimit(1)
 
-            if let edit {
-                Button(action: edit) {
-                    Image(systemName: "pencil")
+                Button(action: cancelDelete) {
+                    Image(systemName: "xmark")
                 }
-                .buttonStyle(RowIconButtonStyle(isActive: isHovering))
-                .help("Edit")
-            }
+                .buttonStyle(RowIconButtonStyle(isActive: true))
+                .help("Cancel")
 
-            Button(role: .destructive, action: delete) {
-                Image(systemName: "trash")
+                Button(action: confirmDelete) {
+                    Image(systemName: "trash.fill")
+                }
+                .buttonStyle(RowIconButtonStyle(isDestructive: true, isActive: true))
+                .help("Confirm delete")
+            } else {
+                if let copy {
+                    Button {
+                        copy()
+                        markCopied()
+                    } label: {
+                        Image(systemName: didCopy ? "checkmark" : "doc.on.doc")
+                    }
+                    .buttonStyle(RowIconButtonStyle(isActive: isHovering || didCopy))
+                    .help(didCopy ? "Copied" : "Copy link")
+                }
+
+                if let edit {
+                    Button(action: edit) {
+                        Image(systemName: "pencil")
+                    }
+                    .buttonStyle(RowIconButtonStyle(isActive: isHovering))
+                    .help("Edit")
+                }
+
+                Button(action: requestDelete) {
+                    Image(systemName: "trash")
+                }
+                .buttonStyle(RowIconButtonStyle(isDestructive: true, isActive: isHovering))
+                .help("Delete")
             }
-            .buttonStyle(RowIconButtonStyle(isDestructive: true, isActive: isHovering))
-            .help("Delete")
         }
         .padding(.horizontal, 7)
         .padding(.vertical, 5)
@@ -308,6 +316,7 @@ private struct AccessItemRow: View {
         .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         .onHover { isHovering = $0 }
         .animation(.easeOut(duration: 0.12), value: isHovering)
+        .animation(.easeOut(duration: 0.12), value: isConfirmingDelete)
     }
 
     private func markCopied() {
