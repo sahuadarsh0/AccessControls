@@ -2,9 +2,15 @@
 
 A native macOS menu bar app for one-click access to saved applications and URLs/deep links.
 
-![Access Controls menu preview](docs/images/menu-preview.svg)
+## Preview
 
-![Access Controls app picker preview](docs/images/app-picker-preview.svg)
+<p>
+  <img src="docs/images/menu-preview.svg" alt="Access Controls menu preview" width="760">
+</p>
+
+<p>
+  <img src="docs/images/app-picker-preview.svg" alt="Access Controls app picker preview" width="760">
+</p>
 
 ## Features
 
@@ -29,3 +35,7 @@ open build/AccessControls.app
 ```
 
 The app is packaged as a menu bar-only app using `LSUIElement`, so it does not show a Dock icon.
+
+## License
+
+Access Controls is open source under the MIT License.

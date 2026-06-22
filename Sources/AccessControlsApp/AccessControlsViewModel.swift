@@ -125,8 +125,9 @@ final class AccessControlsViewModel: ObservableObject {
             return
         }
 
+        let size = NSSize(width: 440, height: 430)
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 440, height: 430),
+            contentRect: NSRect(origin: .zero, size: size),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
@@ -151,7 +152,7 @@ final class AccessControlsViewModel: ObservableObject {
             )
         )
         linkEditorWindow = window
-        window.center()
+        positionUtilityWindow(window, size: size, topOffset: 64)
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
@@ -163,8 +164,9 @@ final class AccessControlsViewModel: ObservableObject {
             return
         }
 
+        let size = NSSize(width: 390, height: 460)
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 390, height: 460),
+            contentRect: NSRect(origin: .zero, size: size),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
@@ -181,9 +183,42 @@ final class AccessControlsViewModel: ObservableObject {
             )
         )
         appPickerWindow = window
-        window.center()
+        positionUtilityWindow(window, size: size, topOffset: 64)
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func positionUtilityWindow(_ window: NSWindow, size: NSSize, topOffset: CGFloat) {
+        window.level = .floating
+        window.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]
+        window.isMovableByWindowBackground = true
+        window.tabbingMode = .disallowed
+
+        guard let screen = screenForUtilityWindow() else {
+            window.center()
+            return
+        }
+
+        let visibleFrame = screen.visibleFrame
+        let edgePadding: CGFloat = 24
+        let reservedMenuWidth: CGFloat = 430
+        let preferredX = visibleFrame.maxX - reservedMenuWidth - size.width - 18
+        let centeredX = visibleFrame.midX - size.width / 2
+        let unclampedX = preferredX >= visibleFrame.minX + edgePadding ? preferredX : centeredX
+        let x = min(max(unclampedX, visibleFrame.minX + edgePadding), visibleFrame.maxX - size.width - edgePadding)
+        let y = min(
+            max(visibleFrame.maxY - size.height - topOffset, visibleFrame.minY + edgePadding),
+            visibleFrame.maxY - size.height - edgePadding
+        )
+
+        window.setFrame(NSRect(x: x, y: y, width: size.width, height: size.height), display: false)
+    }
+
+    private func screenForUtilityWindow() -> NSScreen? {
+        let mouseLocation = NSEvent.mouseLocation
+        return NSScreen.screens.first { screen in
+            screen.frame.contains(mouseLocation)
+        } ?? NSScreen.main
     }
 
     func delete(_ item: AccessItem) {

@@ -1,31 +1,56 @@
-<svg width="960" height="620" viewBox="0 0 960 620" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="960" height="620" rx="36" fill="#050608"/>
-  <circle cx="808" cy="80" r="190" fill="#F4D58D" opacity="0.12"/>
-  <rect x="270" y="72" width="420" height="476" rx="24" fill="#0B0D12" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-  <text x="300" y="122" fill="#F8F8F6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="24" font-weight="750">Add app</text>
-  <text x="300" y="148" fill="rgba(255,255,255,0.56)" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" font-weight="600">Pick an installed app. It saves immediately.</text>
-  <rect x="296" y="176" width="368" height="282" rx="18" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.12)"/>
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <rect width="1200" height="1200" fill="#050608"/>
+  <circle cx="940" cy="104" r="220" fill="#F4D58D" opacity="0.12"/>
+  <circle cx="980" cy="120" r="92" fill="#F4D58D" opacity="0.09"/>
+  <g transform="translate(0 220)">
+  <rect x="374" y="92" width="452" height="576" rx="28" fill="#0B0D12" stroke="#2B2E37" stroke-width="1.5"/>
+  <rect x="374" y="92" width="452" height="576" rx="28" fill="url(#glass)" opacity="0.72"/>
+
+  <text x="414" y="146" fill="#F8F8F6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="25" font-weight="760">Add app</text>
+  <text x="414" y="176" fill="#A7ABB6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13" font-weight="620">Pick an installed app. It saves immediately.</text>
+
+  <rect x="410" y="212" width="380" height="320" rx="18" fill="#11141B" stroke="#2A2E38"/>
   <g>
-    <rect x="312" y="194" width="336" height="54" rx="14" fill="rgba(255,255,255,0.095)" stroke="rgba(255,255,255,0.10)"/>
-    <rect x="326" y="206" width="30" height="30" rx="7" fill="rgba(244,213,141,0.18)"/>
-    <text x="370" y="222" fill="white" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="700">Cursor</text>
-    <text x="370" y="239" fill="rgba(255,255,255,0.44)" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="11" font-weight="600">/Applications/Cursor.app</text>
-    <text x="616" y="226" fill="#F0D38A" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12" font-weight="800">Add</text>
+    <rect x="430" y="234" width="340" height="58" rx="14" fill="#191D27" stroke="#303542"/>
+    <rect x="446" y="248" width="30" height="30" rx="8" fill="#252B36"/>
+    <circle cx="461" cy="263" r="10" fill="#F4D58D" opacity="0.92"/>
+    <text x="492" y="259" fill="#F8F8F6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="720">Cursor</text>
+    <text x="492" y="278" fill="#858B98" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="11" font-weight="600">/Applications/Cursor.app</text>
+    <text x="742" y="268" fill="#F0D38A" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12" font-weight="800" text-anchor="end">Add</text>
   </g>
   <g>
-    <rect x="312" y="258" width="336" height="54" rx="14" fill="rgba(255,255,255,0.095)" stroke="rgba(255,255,255,0.10)"/>
-    <rect x="326" y="270" width="30" height="30" rx="7" fill="rgba(244,213,141,0.18)"/>
-    <text x="370" y="286" fill="white" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="700">Google Chrome</text>
-    <text x="370" y="303" fill="rgba(255,255,255,0.44)" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="11" font-weight="600">/Applications/Google Chrome.app</text>
-    <text x="606" y="290" fill="rgba(255,255,255,0.48)" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12" font-weight="800">Added</text>
+    <rect x="430" y="306" width="340" height="58" rx="14" fill="#191D27" stroke="#303542"/>
+    <rect x="446" y="320" width="30" height="30" rx="8" fill="#252B36"/>
+    <circle cx="461" cy="335" r="10" fill="#7CC4FF" opacity="0.92"/>
+    <text x="492" y="331" fill="#F8F8F6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="720">Google Chrome</text>
+    <text x="492" y="350" fill="#858B98" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="11" font-weight="600">/Applications/Google Chrome.app</text>
+    <text x="742" y="340" fill="#737985" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12" font-weight="800" text-anchor="end">Added</text>
   </g>
   <g>
-    <rect x="312" y="322" width="336" height="54" rx="14" fill="rgba(255,255,255,0.095)" stroke="rgba(255,255,255,0.10)"/>
-    <rect x="326" y="334" width="30" height="30" rx="7" fill="rgba(244,213,141,0.18)"/>
-    <text x="370" y="350" fill="white" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="700">Slack</text>
-    <text x="370" y="367" fill="rgba(255,255,255,0.44)" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="11" font-weight="600">/Applications/Slack.app</text>
-    <text x="616" y="354" fill="#F0D38A" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12" font-weight="800">Add</text>
+    <rect x="430" y="378" width="340" height="58" rx="14" fill="#191D27" stroke="#303542"/>
+    <rect x="446" y="392" width="30" height="30" rx="8" fill="#252B36"/>
+    <circle cx="461" cy="407" r="10" fill="#B792FF" opacity="0.92"/>
+    <text x="492" y="403" fill="#F8F8F6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="720">Slack</text>
+    <text x="492" y="422" fill="#858B98" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="11" font-weight="600">/Applications/Slack.app</text>
+    <text x="742" y="412" fill="#F0D38A" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12" font-weight="800" text-anchor="end">Add</text>
   </g>
-  <rect x="300" y="476" width="160" height="40" rx="13" fill="rgba(255,255,255,0.085)" stroke="rgba(255,255,255,0.12)"/>
-  <text x="326" y="501" fill="white" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="750">Choose other...</text>
+  <g>
+    <rect x="430" y="450" width="340" height="58" rx="14" fill="#191D27" stroke="#303542"/>
+    <rect x="446" y="464" width="30" height="30" rx="8" fill="#252B36"/>
+    <circle cx="461" cy="479" r="10" fill="#24B47E" opacity="0.92"/>
+    <text x="492" y="475" fill="#F8F8F6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="720">Notion</text>
+    <text x="492" y="494" fill="#858B98" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="11" font-weight="600">/Applications/Notion.app</text>
+    <text x="742" y="484" fill="#F0D38A" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12" font-weight="800" text-anchor="end">Add</text>
+  </g>
+
+  <rect x="414" y="558" width="174" height="42" rx="13" fill="#12161E" stroke="#2B2F3A"/>
+  <text x="501" y="585" fill="#F8F8F6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="760" text-anchor="middle">Choose other...</text>
+  </g>
+
+  <defs>
+    <linearGradient id="glass" x1="374" y1="92" x2="826" y2="668" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.045"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.015"/>
+    </linearGradient>
+  </defs>
 </svg>

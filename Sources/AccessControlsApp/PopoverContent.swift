@@ -20,8 +20,8 @@ struct PopoverContent: View {
         }
 
         let sectionCount = (apps.isEmpty ? 0 : 1) + (links.isEmpty ? 0 : 1)
-        let rawHeight = CGFloat(model.items.count * 54 + sectionCount * 28 + 12)
-        return min(max(rawHeight, 84), 330)
+        let rawHeight = CGFloat(apps.count * 42 + links.count * 58 + sectionCount * 26 + 12)
+        return min(max(rawHeight, 84), 318)
     }
 
     var body: some View {
@@ -241,22 +241,29 @@ private struct AccessItemRow: View {
     @State private var isHovering = false
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: item.kind == .app ? 5 : 6) {
             Button(action: open) {
                 HStack(spacing: 9) {
                     iconTile
 
-                    VStack(alignment: .leading, spacing: 1) {
+                    if let subtitle {
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(item.title)
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(.white)
+                                .lineLimit(1)
+
+                            Text(subtitle)
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.5))
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                        }
+                    } else {
                         Text(item.title)
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(.white)
                             .lineLimit(1)
-
-                        Text(subtitle)
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.5))
-                            .lineLimit(1)
-                            .truncationMode(.middle)
                     }
 
                     Spacer(minLength: 0)
@@ -279,8 +286,8 @@ private struct AccessItemRow: View {
             .buttonStyle(TinyIconButtonStyle(isDestructive: true))
             .help("Delete")
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 7)
+        .padding(.horizontal, item.kind == .app ? 7 : 8)
+        .padding(.vertical, item.kind == .app ? 5 : 7)
         .background(
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -298,9 +305,9 @@ private struct AccessItemRow: View {
         .onHover { isHovering = $0 }
     }
 
-    private var subtitle: String {
-        if item.kind == .app {
-            return "Open app"
+    private var subtitle: String? {
+        guard item.kind == .link else {
+            return nil
         }
         if !item.detail.isEmpty {
             return item.detail
@@ -317,14 +324,14 @@ private struct AccessItemRow: View {
                 Image(nsImage: appIcon)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 23, height: 23)
+                    .frame(width: item.kind == .app ? 21 : 23, height: item.kind == .app ? 21 : 23)
             } else {
                 Image(systemName: item.kind == .app ? "app.fill" : "arrow.up.forward.app.fill")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(tileColor)
             }
         }
-        .frame(width: 32, height: 32)
+        .frame(width: item.kind == .app ? 28 : 32, height: item.kind == .app ? 28 : 32)
     }
 
     private var tileColor: Color {
