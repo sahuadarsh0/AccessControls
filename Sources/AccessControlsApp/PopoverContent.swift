@@ -100,7 +100,7 @@ struct PopoverContent: View {
     }
 
     private var shortcutList: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 8) {
                 if model.items.isEmpty {
                     emptyState
@@ -112,10 +112,10 @@ struct PopoverContent: View {
             .padding(8)
         }
         .frame(height: listHeight)
-        .background(.white.opacity(0.075), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background(.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(.white.opacity(0.13), lineWidth: 1)
+                .stroke(.white.opacity(0.10), lineWidth: 1)
         )
     }
 
@@ -267,7 +267,7 @@ private struct AccessItemRow: View {
                 } label: {
                     Image(systemName: didCopy ? "checkmark" : "doc.on.doc")
                 }
-                .buttonStyle(TinyIconButtonStyle())
+                .buttonStyle(RowIconButtonStyle(isActive: isHovering || didCopy))
                 .help(didCopy ? "Copied" : "Copy link")
             }
 
@@ -275,33 +275,37 @@ private struct AccessItemRow: View {
                 Button(action: edit) {
                     Image(systemName: "pencil")
                 }
-                .buttonStyle(TinyIconButtonStyle())
+                .buttonStyle(RowIconButtonStyle(isActive: isHovering))
                 .help("Edit")
             }
 
             Button(role: .destructive, action: delete) {
                 Image(systemName: "trash")
             }
-            .buttonStyle(TinyIconButtonStyle(isDestructive: true))
+            .buttonStyle(RowIconButtonStyle(isDestructive: true, isActive: isHovering))
             .help("Delete")
         }
         .padding(.horizontal, 7)
         .padding(.vertical, 5)
         .background(
             ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(.white.opacity(isHovering ? 0.14 : 0.095))
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(.white.opacity(isHovering ? 0.20 : 0.11), lineWidth: 1)
+                if isHovering {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(.white.opacity(0.085))
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(.white.opacity(0.11), lineWidth: 1)
+                }
                 if item.kind == .link {
                     RoundedRectangle(cornerRadius: 3, style: .continuous)
                         .fill(Color(hex: item.colorHex))
                         .frame(width: 3)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 9)
                 }
             }
         )
+        .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         .onHover { isHovering = $0 }
+        .animation(.easeOut(duration: 0.12), value: isHovering)
     }
 
     private func markCopied() {
@@ -545,5 +549,36 @@ private struct TinyIconButtonStyle: ButtonStyle {
             .foregroundStyle(isDestructive ? Color(hex: "#FF8A8A") : .white.opacity(0.72))
             .frame(width: 25, height: 25)
             .background(.white.opacity(configuration.isPressed ? 0.14 : 0.075), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+}
+
+private struct RowIconButtonStyle: ButtonStyle {
+    var isDestructive = false
+    var isActive = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 11, weight: .semibold))
+            .foregroundStyle(iconColor)
+            .frame(width: 25, height: 25)
+            .background(
+                .white.opacity(backgroundOpacity(configuration: configuration)),
+                in: RoundedRectangle(cornerRadius: 8, style: .continuous)
+            )
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+    }
+
+    private var iconColor: Color {
+        if isDestructive {
+            return Color(hex: "#FF8A8A").opacity(isActive ? 1.0 : 0.76)
+        }
+        return .white.opacity(isActive ? 0.78 : 0.55)
+    }
+
+    private func backgroundOpacity(configuration: Configuration) -> Double {
+        if configuration.isPressed {
+            return 0.13
+        }
+        return isActive ? 0.07 : 0
     }
 }
