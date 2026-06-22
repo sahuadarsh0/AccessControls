@@ -1,13 +1,13 @@
 import Foundation
 
-public enum AccessItemKind: String, Codable, CaseIterable, Sendable {
+public enum RouteItemKind: String, Codable, CaseIterable, Sendable {
     case app
     case link
 }
 
-public struct AccessItem: Codable, Equatable, Identifiable, Sendable {
+public struct RouteItem: Codable, Equatable, Identifiable, Sendable {
     public var id: UUID
-    public var kind: AccessItemKind
+    public var kind: RouteItemKind
     public var title: String
     public var detail: String
     public var colorHex: String
@@ -19,7 +19,7 @@ public struct AccessItem: Codable, Equatable, Identifiable, Sendable {
 
     public init(
         id: UUID = UUID(),
-        kind: AccessItemKind,
+        kind: RouteItemKind,
         title: String,
         detail: String = "",
         colorHex: String = "#4F7CAC",

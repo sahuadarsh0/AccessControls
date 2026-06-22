@@ -1,16 +1,16 @@
-import AccessControlsCore
+import RouteBarCore
 import AppKit
 import SwiftUI
 
 struct PopoverContent: View {
-    @ObservedObject var model: AccessControlsViewModel
-    @State private var pendingDeleteID: AccessItem.ID?
+    @ObservedObject var model: RouteBarViewModel
+    @State private var pendingDeleteID: RouteItem.ID?
 
-    private var apps: [AccessItem] {
+    private var apps: [RouteItem] {
         model.items.filter { $0.kind == .app }
     }
 
-    private var links: [AccessItem] {
+    private var links: [RouteItem] {
         model.items.filter { $0.kind == .link }
     }
 
@@ -53,10 +53,10 @@ struct PopoverContent: View {
 
     private var header: some View {
         HStack(spacing: 9) {
-            AccessBrandIcon(size: 22, showsShadow: true)
+            RouteBrandIcon(size: 22, showsShadow: true)
 
             VStack(alignment: .leading, spacing: 0) {
-                Text("Access Controls")
+                Text("Route Bar")
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                 Text("\(model.items.count) shortcuts")
@@ -99,7 +99,7 @@ struct PopoverContent: View {
     }
 
     @ViewBuilder
-    private func section(title: String, items: [AccessItem]) -> some View {
+    private func section(title: String, items: [RouteItem]) -> some View {
         if !items.isEmpty {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
@@ -116,7 +116,7 @@ struct PopoverContent: View {
 
                 VStack(spacing: 0) {
                     ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                        AccessItemRow(
+                        RouteItemRow(
                             item: item,
                             open: { model.open(item) },
                             copy: item.kind == .link ? { model.copyTarget(item) } : nil,
@@ -224,8 +224,8 @@ struct PopoverContent: View {
     }
 }
 
-private struct AccessItemRow: View {
-    var item: AccessItem
+private struct RouteItemRow: View {
+    var item: RouteItem
     var open: () -> Void
     var copy: (() -> Void)?
     var edit: (() -> Void)?
@@ -372,7 +372,7 @@ private struct ShortcutSeparator: View {
 }
 
 struct AppPickerWindowView: View {
-    @ObservedObject var model: AccessControlsViewModel
+    @ObservedObject var model: RouteBarViewModel
     var close: () -> Void
 
     var body: some View {

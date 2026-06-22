@@ -1,4 +1,4 @@
-import AccessControlsCore
+import RouteBarCore
 import AppKit
 import Combine
 import ServiceManagement
@@ -6,17 +6,17 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 @MainActor
-final class AccessControlsViewModel: ObservableObject {
-    @Published private(set) var items: [AccessItem] = []
+final class RouteBarViewModel: ObservableObject {
+    @Published private(set) var items: [RouteItem] = []
     @Published var userAlert: UserAlert?
     @Published private(set) var appCandidates: [AppCandidate] = []
     @Published private(set) var launchAtLoginEnabled = false
 
-    private let store: AccessStore
+    private let store: RouteStore
     private var linkEditorWindow: NSWindow?
     private var appPickerWindow: NSWindow?
 
-    init(store: AccessStore = AccessStore()) {
+    init(store: RouteStore = RouteStore()) {
         self.store = store
         load()
         refreshLaunchAtLogin()
@@ -60,7 +60,7 @@ final class AccessControlsViewModel: ObservableObject {
             ?? bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String
             ?? url.deletingPathExtension().lastPathComponent
 
-        let item = AccessItem(
+        let item = RouteItem(
             kind: .app,
             title: displayName,
             colorHex: "#4F7CAC",
@@ -89,13 +89,13 @@ final class AccessControlsViewModel: ObservableObject {
     func addLink() {
         presentLinkEditor(
             draft: EditorDraft(
-            item: AccessItem(kind: .link, title: "", colorHex: "#2F9E44", urlString: ""),
+            item: RouteItem(kind: .link, title: "", colorHex: "#2F9E44", urlString: ""),
             isNew: true
             )
         )
     }
 
-    func edit(_ item: AccessItem) {
+    func edit(_ item: RouteItem) {
         guard item.kind == .link else {
             return
         }
@@ -219,7 +219,7 @@ final class AccessControlsViewModel: ObservableObject {
         } ?? NSScreen.main
     }
 
-    func delete(_ item: AccessItem) {
+    func delete(_ item: RouteItem) {
         do {
             try store.delete(id: item.id)
             items = store.items
@@ -228,7 +228,7 @@ final class AccessControlsViewModel: ObservableObject {
         }
     }
 
-    func open(_ item: AccessItem) {
+    func open(_ item: RouteItem) {
         switch item.kind {
         case .app:
             openApp(item)
@@ -237,7 +237,7 @@ final class AccessControlsViewModel: ObservableObject {
         }
     }
 
-    func copyTarget(_ item: AccessItem) {
+    func copyTarget(_ item: RouteItem) {
         guard item.kind == .link,
               let urlString = item.urlString,
               !urlString.isEmpty
@@ -272,10 +272,10 @@ final class AccessControlsViewModel: ObservableObject {
         }
     }
 
-    private func openApp(_ item: AccessItem) {
+    private func openApp(_ item: RouteItem) {
         guard let applicationURL = applicationURL(for: item) else {
             show(
-                AccessValidationError.missingTarget,
+                RouteValidationError.missingTarget,
                 title: "The saved app could not be found.",
                 fallback: "Edit the item and choose the app again."
             )
@@ -297,12 +297,12 @@ final class AccessControlsViewModel: ObservableObject {
         }
     }
 
-    private func openLink(_ item: AccessItem) {
+    private func openLink(_ item: RouteItem) {
         guard let rawURL = item.urlString,
               let url = URL(string: rawURL)
         else {
             show(
-                AccessValidationError.invalidURL(item.urlString ?? ""),
+                RouteValidationError.invalidURL(item.urlString ?? ""),
                 title: "The saved link is not valid.",
                 fallback: "Edit the item and save it again."
             )
@@ -312,7 +312,7 @@ final class AccessControlsViewModel: ObservableObject {
         NSWorkspace.shared.open(url)
     }
 
-    private func applicationURL(for item: AccessItem) -> URL? {
+    private func applicationURL(for item: RouteItem) -> URL? {
         if let appPath = item.appPath,
            FileManager.default.fileExists(atPath: appPath) {
             return URL(fileURLWithPath: appPath).standardizedFileURL
@@ -325,7 +325,7 @@ final class AccessControlsViewModel: ObservableObject {
         return nil
     }
 
-    private func runningApplication(for item: AccessItem, applicationURL: URL) -> NSRunningApplication? {
+    private func runningApplication(for item: RouteItem, applicationURL: URL) -> NSRunningApplication? {
         NSWorkspace.shared.runningApplications.first { runningApplication in
             if let bundleIdentifier = item.bundleIdentifier,
                runningApplication.bundleIdentifier == bundleIdentifier {
@@ -423,14 +423,14 @@ final class AccessControlsViewModel: ObservableObject {
 
 struct EditorDraft: Identifiable, Equatable {
     let id: UUID
-    var item: AccessItem
+    var item: RouteItem
     var title: String
     var target: String
     var detail: String
     var color: Color
     var isNew: Bool
 
-    init(item: AccessItem, isNew: Bool) {
+    init(item: RouteItem, isNew: Bool) {
         self.id = item.id
         self.item = item
         self.title = item.title
@@ -440,17 +440,17 @@ struct EditorDraft: Identifiable, Equatable {
         self.isNew = isNew
     }
 
-    func validatedItem() throws -> AccessItem {
+    func validatedItem() throws -> RouteItem {
         var validated = item
-        validated.title = try AccessItemValidator.normalizedTitle(title)
-        validated.detail = AccessItemValidator.normalizedDetail(detail)
+        validated.title = try RouteItemValidator.normalizedTitle(title)
+        validated.detail = RouteItemValidator.normalizedDetail(detail)
         validated.colorHex = color.rgbHexString
 
         switch validated.kind {
         case .app:
-            validated.appPath = try AccessItemValidator.validateAppPath(target)
+            validated.appPath = try RouteItemValidator.validateAppPath(target)
         case .link:
-            validated.urlString = try AccessItemValidator.normalizedURLString(target)
+            validated.urlString = try RouteItemValidator.normalizedURLString(target)
         }
 
         return validated

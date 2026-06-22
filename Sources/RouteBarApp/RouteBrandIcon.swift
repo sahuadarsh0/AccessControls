@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-struct AccessBrandIcon: View {
+struct RouteBrandIcon: View {
     var size: CGFloat = 22
     var showsShadow = false
 
@@ -18,7 +18,7 @@ struct AccessBrandIcon: View {
     }
 
     static func installApplicationIcon() {
-        if let iconURL = Bundle.main.url(forResource: "AccessControls", withExtension: "icns"),
+        if let iconURL = Bundle.main.url(forResource: "RouteBar", withExtension: "icns"),
            let icon = NSImage(contentsOf: iconURL) {
             NSApplication.shared.applicationIconImage = icon
             return
@@ -30,8 +30,8 @@ struct AccessBrandIcon: View {
     static let menuBarImage: NSImage = resizedStatusImage(pointSize: 18)
 
     private static let statusImage: NSImage = {
-        let url = Bundle.main.url(forResource: "AccessControlsStatusIcon", withExtension: "png")
-            ?? Bundle.module.url(forResource: "AccessControlsStatusIcon", withExtension: "png")
+        let url = Bundle.main.url(forResource: "RouteBarStatusIcon", withExtension: "png")
+            ?? Bundle.module.url(forResource: "RouteBarStatusIcon", withExtension: "png")
 
         guard let url, let image = NSImage(contentsOf: url) else {
             return fallbackImage

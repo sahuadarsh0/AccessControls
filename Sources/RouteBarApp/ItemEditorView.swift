@@ -1,4 +1,4 @@
-import AccessControlsCore
+import RouteBarCore
 import SwiftUI
 
 struct ItemEditorView: View {
@@ -44,12 +44,12 @@ struct ItemEditorView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     FieldBlock(label: "Label") {
-                        TextField("School portal", text: $draft.title)
+                        TextField("Calculator", text: $draft.title)
                             .textFieldStyle(.plain)
                     }
 
                     FieldBlock(label: "URL or deep link") {
-                        TextField("https://example.com or app://route", text: $draft.target)
+                        TextField("https://example.com or calculator://open", text: $draft.target)
                             .textFieldStyle(.plain)
                     }
 

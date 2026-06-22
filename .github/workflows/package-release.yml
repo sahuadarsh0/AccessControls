@@ -25,7 +25,7 @@ jobs:
     runs-on: macos-15
 
     env:
-      APP_NAME: AccessControls
+      APP_NAME: RouteBar
       RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
 
     steps:
@@ -36,7 +36,7 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode.app
 
       - name: Run core checks
-        run: swift run AccessControlsCoreChecks
+        run: swift run RouteBarCoreChecks
 
       - name: Build app bundle
         run: Scripts/build-app.sh
@@ -60,7 +60,7 @@ jobs:
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           target_commitish: ${{ github.sha }}
-          name: Access Controls ${{ env.RELEASE_TAG }}
+          name: Route Bar ${{ env.RELEASE_TAG }}
           draft: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.draft == 'true' }}
           generate_release_notes: true
           files: |

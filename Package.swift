@@ -3,36 +3,36 @@
 import PackageDescription
 
 let package = Package(
-    name: "AccessControls",
+    name: "RouteBar",
     platforms: [
         .macOS(.v13)
     ],
     products: [
         .library(
-            name: "AccessControlsCore",
-            targets: ["AccessControlsCore"]
+            name: "RouteBarCore",
+            targets: ["RouteBarCore"]
         ),
         .executable(
-            name: "AccessControls",
-            targets: ["AccessControlsApp"]
+            name: "RouteBar",
+            targets: ["RouteBarApp"]
         ),
         .executable(
-            name: "AccessControlsCoreChecks",
-            targets: ["AccessControlsCoreChecks"]
+            name: "RouteBarCoreChecks",
+            targets: ["RouteBarCoreChecks"]
         )
     ],
     targets: [
-        .target(name: "AccessControlsCore"),
+        .target(name: "RouteBarCore"),
         .executableTarget(
-            name: "AccessControlsApp",
-            dependencies: ["AccessControlsCore"],
+            name: "RouteBarApp",
+            dependencies: ["RouteBarCore"],
             resources: [
                 .process("Resources")
             ]
         ),
         .executableTarget(
-            name: "AccessControlsCoreChecks",
-            dependencies: ["AccessControlsCore"],
+            name: "RouteBarCoreChecks",
+            dependencies: ["RouteBarCore"],
             path: "Tools/CoreChecks"
         )
     ]

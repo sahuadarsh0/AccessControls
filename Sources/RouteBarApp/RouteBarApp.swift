@@ -2,20 +2,20 @@ import AppKit
 import SwiftUI
 
 @main
-struct AccessControlsApp: App {
-    @StateObject private var model = AccessControlsViewModel()
+struct RouteBarApp: App {
+    @StateObject private var model = RouteBarViewModel()
 
     init() {
-        AccessBrandIcon.installApplicationIcon()
+        RouteBrandIcon.installApplicationIcon()
     }
 
     var body: some Scene {
         MenuBarExtra {
             PopoverContent(model: model)
         } label: {
-            Image(nsImage: AccessBrandIcon.menuBarImage)
+            Image(nsImage: RouteBrandIcon.menuBarImage)
                 .renderingMode(.original)
-                .help("Access Controls")
+                .help("Route Bar")
         }
         .menuBarExtraStyle(.window)
     }

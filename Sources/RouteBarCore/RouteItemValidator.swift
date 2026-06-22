@@ -1,6 +1,6 @@
 import Foundation
 
-public enum AccessValidationError: Error, Equatable, LocalizedError {
+public enum RouteValidationError: Error, Equatable, LocalizedError {
     case missingTitle
     case missingTarget
     case invalidURL(String)
@@ -23,11 +23,11 @@ public enum AccessValidationError: Error, Equatable, LocalizedError {
     }
 }
 
-public enum AccessItemValidator {
+public enum RouteItemValidator {
     public static func normalizedTitle(_ rawValue: String) throws -> String {
         let title = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !title.isEmpty else {
-            throw AccessValidationError.missingTitle
+            throw RouteValidationError.missingTitle
         }
         return title
     }
@@ -44,7 +44,7 @@ public enum AccessItemValidator {
         guard withoutHash.count == 6,
               withoutHash.rangeOfCharacter(from: validCharacters.inverted) == nil
         else {
-            throw AccessValidationError.invalidColor(rawValue)
+            throw RouteValidationError.invalidColor(rawValue)
         }
 
         return "#\(withoutHash.uppercased())"
@@ -53,7 +53,7 @@ public enum AccessItemValidator {
     public static func normalizedURLString(_ rawValue: String) throws -> String {
         let trimmed = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
-            throw AccessValidationError.missingTarget
+            throw RouteValidationError.missingTarget
         }
 
         let hasExplicitScheme = trimmed.range(
@@ -67,12 +67,12 @@ public enum AccessItemValidator {
               !scheme.isEmpty,
               URL(string: candidate) != nil
         else {
-            throw AccessValidationError.invalidURL(rawValue)
+            throw RouteValidationError.invalidURL(rawValue)
         }
 
         if scheme.lowercased() == "http" || scheme.lowercased() == "https" {
             guard let host = components.host, !host.isEmpty else {
-                throw AccessValidationError.invalidURL(rawValue)
+                throw RouteValidationError.invalidURL(rawValue)
             }
         }
 
@@ -82,7 +82,7 @@ public enum AccessItemValidator {
     public static func validateAppPath(_ rawValue: String, fileManager: FileManager = .default) throws -> String {
         let path = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !path.isEmpty else {
-            throw AccessValidationError.missingTarget
+            throw RouteValidationError.missingTarget
         }
 
         var isDirectory: ObjCBool = false
@@ -90,7 +90,7 @@ public enum AccessItemValidator {
               isDirectory.boolValue,
               path.hasSuffix(".app")
         else {
-            throw AccessValidationError.invalidAppPath(rawValue)
+            throw RouteValidationError.invalidAppPath(rawValue)
         }
 
         return path

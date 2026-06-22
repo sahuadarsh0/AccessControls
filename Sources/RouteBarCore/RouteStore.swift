@@ -1,10 +1,10 @@
 import Foundation
 
-public final class AccessStore {
-    public private(set) var items: [AccessItem] = []
+public final class RouteStore {
+    public private(set) var items: [RouteItem] = []
     public let fileURL: URL
 
-    public init(fileURL: URL = AccessStore.defaultFileURL()) {
+    public init(fileURL: URL = RouteStore.defaultFileURL()) {
         self.fileURL = fileURL
     }
 
@@ -14,9 +14,34 @@ public final class AccessStore {
             in: .userDomainMask
         ).first!
 
-        return applicationSupportURL
+        let fileURL = applicationSupportURL
+            .appendingPathComponent("RouteBar", isDirectory: true)
+            .appendingPathComponent("items.json")
+        let legacyFileURL = applicationSupportURL
             .appendingPathComponent("AccessControls", isDirectory: true)
             .appendingPathComponent("items.json")
+
+        migrateLegacyStoreIfNeeded(from: legacyFileURL, to: fileURL)
+        return fileURL
+    }
+
+    private static func migrateLegacyStoreIfNeeded(from legacyFileURL: URL, to fileURL: URL) {
+        let fileManager = FileManager.default
+        guard !fileManager.fileExists(atPath: fileURL.path),
+              fileManager.fileExists(atPath: legacyFileURL.path)
+        else {
+            return
+        }
+
+        do {
+            try fileManager.createDirectory(
+                at: fileURL.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+            try fileManager.copyItem(at: legacyFileURL, to: fileURL)
+        } catch {
+            // Loading will fall back to an empty store if migration is not possible.
+        }
     }
 
     public func load() throws {
@@ -28,7 +53,7 @@ public final class AccessStore {
         let data = try Data(contentsOf: fileURL)
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        items = try decoder.decode([AccessItem].self, from: data)
+        items = try decoder.decode([RouteItem].self, from: data)
             .sorted { first, second in
                 first.createdAt < second.createdAt
             }
@@ -48,7 +73,7 @@ public final class AccessStore {
         try data.write(to: fileURL, options: [.atomic])
     }
 
-    public func upsert(_ item: AccessItem) throws {
+    public func upsert(_ item: RouteItem) throws {
         var copy = item
         copy.updatedAt = Date()
 
@@ -62,7 +87,7 @@ public final class AccessStore {
         try save()
     }
 
-    public func delete(id: AccessItem.ID) throws {
+    public func delete(id: RouteItem.ID) throws {
         items.removeAll { $0.id == id }
         try save()
     }
